@@ -53,3 +53,4 @@ export default tseslint.config({
 })
 ```
 # bug-hunt-frontend
+# bug-hunt-frontend
