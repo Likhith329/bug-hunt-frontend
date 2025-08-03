@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "./WaitingPage.module.css";
 import { useEffect, useState } from "react";
 import api from "../../lib/api";
@@ -9,10 +9,11 @@ const WaitingPage = () => {
   const [players, setPlayers] = useState([])
   const [username,] = useState(localStorage.getItem('username'))
   const [userId,] = useState(localStorage.getItem('userId'))
+  const [playerId, setPlayerId] = useState('')
+  const navigate = useNavigate()
 
   useEffect(() => {
     getRoomDetails()
-    socket.emit('join-room', {roomId, username, userId})
     socket.on('player-joined', handlePlayerJoined);
     socket.on('player-left', handlePlayerLeft)
     return () => {
@@ -22,10 +23,20 @@ const WaitingPage = () => {
   }, [])
 
   const getRoomDetails = async() => {
-    let res = await api.get(`room/${roomId}`)
-    setPlayers(res.data.players.map((p: any) => {
-      return {id: p.id, name: p.user.username}
-    }))
+    try {
+      let res = await api.get(`room/${roomId}`)
+      setPlayers(res.data.players.map((p: any) => {
+        if(p.userId == userId) {
+          setPlayerId(p.id)
+          socket.emit('join-room', {roomId, username, playerId: p.id})
+        }
+        return {id: p.id, name: p.user.username}
+      }))
+    } catch (error: any) {
+      if (error.response && error.response.status === 403) {
+        navigate('/lobby');
+      }
+    }
   }
 
   const handleRoomCodeCopy = () => {
@@ -36,16 +47,16 @@ const WaitingPage = () => {
 
   const handlePlayerJoined = (data: any) => {
     setPlayers((prevPlayers: any) => {
-      if (prevPlayers.some((p: any) => p.id === data.userId)) {
+      if (prevPlayers.some((p: any) => p.id === data.playerId)) {
         return prevPlayers;
       }
-      return [...prevPlayers, { id: data.userId, name: data.name }];
+      return [...prevPlayers, { id: data.playerId, name: data.name }];
     });
   }
 
   const handlePlayerLeft = (data: any) => {
     setPlayers((prevPlayers: any) => {
-      return prevPlayers.filter((p: any) => p.id !== data.userId);
+      return prevPlayers.filter((p: any) => p.id !== data.playerId);
     });
   };
   
@@ -53,7 +64,8 @@ const WaitingPage = () => {
   const handleLeaveRoom = async() => {
     try {
       await api.post(`/room/${roomId}/leave`)
-      socket.emit('leave-room', {roomId, username, userId})
+      socket.emit('leave-room', {roomId, username, playerId})
+      navigate('/lobby')
     } catch (error) {
       console.log(error)
     }
