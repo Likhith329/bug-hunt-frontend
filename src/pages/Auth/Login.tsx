@@ -1,7 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import styles from "./Auth.module.css";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../lib/api";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const Login = () => {
 
   const login = async (payload: any) => {
     try {
-      const res = await axios.post("http://localhost:5000/auth/login", payload);
+      const res = await api.post('/auth/login', payload);
       localStorage.setItem("token", res.data.token);
       navigate("/lobby");
     } catch (error) {

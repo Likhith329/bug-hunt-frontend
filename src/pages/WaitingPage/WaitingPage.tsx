@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import styles from "./WaitingPage.module.css";
-import axios from "axios";
 import { useEffect, useState } from "react";
+import api from "../../lib/api";
 
 const WaitingPage = () => {
   const { roomId } = useParams()
@@ -12,9 +12,7 @@ const WaitingPage = () => {
   }, [])
 
   const getRoomDetails = async() => {
-    let res = await axios.get(`http://localhost:5000/room/${roomId}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    })
+    let res = await api.get(`room/${roomId}`)
     setPlayers(res.data.players.map((p: any) => {
       return {id: p.id, name: p.user.username}
     }))

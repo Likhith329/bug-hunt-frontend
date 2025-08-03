@@ -2,6 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 // import './Auth.css';
 import { Link } from "react-router-dom";
 import axios from "axios";
+import api from "../../lib/api";
 
 interface SignupValues {
   username: string;
@@ -41,7 +42,7 @@ const validate = (values: SignupValues) => {
 };
 
 const register = async(payload: any) => {
-  let res  = await axios.post('http://localhost:5000/auth/signup', payload)
+  let res = await api.post('/auth/signup', payload);
   console.log(res)
 }
 

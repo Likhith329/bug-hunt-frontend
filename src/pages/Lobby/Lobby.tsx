@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import styles from "./Lobby.module.css";
 import { FaArrowLeft } from "react-icons/fa";
-import axios from "axios";
+import api from "../../lib/api";
 
 const Lobby = () => {
   const navigate = useNavigate();
@@ -13,9 +13,7 @@ const Lobby = () => {
   const handleCreateRoom = async () => {
     try {
       setLoading(true);
-      let res = await axios.post('http://localhost:5000/room/', {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      })
+      let res = await api.post('/room', {})
       navigate(`/waiting/${res.data.roomId}`)
     } catch (err) {
       console.error(err);
@@ -29,9 +27,7 @@ const Lobby = () => {
       if (roomCode.trim() !== "") {
         try {
           setLoading(true);
-          await axios.post(`http://localhost:5000/room/${roomCode}/join`, {}, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-          })
+          await api.post(`/room/${roomCode}/join`)
           navigate(`/waiting/${roomCode}`)
         } catch (error) {
           console.log(error)
