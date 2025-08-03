@@ -143,4 +143,58 @@
     top: 20px;
     cursor: pointer;
   }
+
+  .letterCarousel {
+    display: inline-flex;
+    font-size: 40px;
+    font-family: monospace;
+    overflow: hidden;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .letterCarousel span {
+    display: inline-block;
+    animation: shift 1s infinite;
+    font-weight: bold;
+    color: #00ffaa;
+    text-shadow: 0 0 10px rgba(0, 255, 128, 0.5);
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  .letterCarousel span:nth-child(1) {
+    animation-delay: 0s;
+  }
+  .letterCarousel span:nth-child(2) {
+    animation-delay: 0.10s;
+  }
+  .letterCarousel span:nth-child(3) {
+    animation-delay: 0.20s;
+  }
+  .letterCarousel span:nth-child(4) {
+    animation-delay: 0.30s;
+  }
+  .letterCarousel span:nth-child(5) {
+    animation-delay: 0.40s;
+  }
+  .letterCarousel span:nth-child(6) {
+    animation-delay: 0.50s;
+  }
+  .letterCarousel span:nth-child(7) {
+    animation-delay: 0.6s;
+  }
+  .letterCarousel span:nth-child(8) {
+    animation-delay: 0.7s;
+  }
+  
+  @keyframes shift {
+    0% { transform: translateX(0);}
+    10% { transform: translateY(-10px); }
+    20% { transform: translateY(0);}
+    80% { transform: translateX(0); }
+    100% { transform: translateX(0); }
+  }
+  
   
