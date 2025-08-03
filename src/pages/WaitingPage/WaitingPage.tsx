@@ -7,13 +7,17 @@ import socket from "../../lib/socket";
 const WaitingPage = () => {
   const { roomId } = useParams()
   const [players, setPlayers] = useState([])
+  const [username,] = useState(localStorage.getItem('username'))
+  const [userId,] = useState(localStorage.getItem('userId'))
 
   useEffect(() => {
     getRoomDetails()
-    socket.emit('join-room', {roomId, username: localStorage.getItem('username'), userId: localStorage.getItem('userId')})
+    socket.emit('join-room', {roomId, username, userId})
     socket.on('player-joined', handlePlayerJoined);
+    socket.on('player-left', handlePlayerLeft)
     return () => {
       socket.off('player-joined', handlePlayerJoined);
+      socket.off('player-left', handlePlayerLeft)
     };
   }, [])
 
@@ -32,20 +36,34 @@ const WaitingPage = () => {
 
   const handlePlayerJoined = (data: any) => {
     setPlayers((prevPlayers: any) => {
-      console.log(prevPlayers)
       if (prevPlayers.some((p: any) => p.id === data.userId)) {
         return prevPlayers;
       }
       return [...prevPlayers, { id: data.userId, name: data.name }];
     });
-    console.log('a new player joined', data)
+  }
+
+  const handlePlayerLeft = (data: any) => {
+    setPlayers((prevPlayers: any) => {
+      return prevPlayers.filter((p: any) => p.id !== data.userId);
+    });
+  };
+  
+  
+  const handleLeaveRoom = async() => {
+    try {
+      await api.post(`/room/${roomId}/leave`)
+      socket.emit('leave-room', {roomId, username, userId})
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
     <div className={styles.waitingPage}>
       <div className={styles.wpContainer}>
         <div className={styles.wpHeader}>
-          <div className={styles.title}>Waiting for Players...</div>
+          <div className={styles.title}>Waiting for Players...</div>``
           <div className={styles.subtitle}>
             Join the game with this room code:
           </div>
@@ -68,7 +86,7 @@ const WaitingPage = () => {
 
         <div className={styles.actionButtons}>
           <div className={styles.actionButton}>start Game</div>
-          <div className={styles.actionButton}>Leave Room</div>
+          <div className={styles.actionButton} onClick={handleLeaveRoom}>Leave Room</div>
         </div>
       </div>
     </div>
