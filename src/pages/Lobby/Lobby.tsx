@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import styles from "./Lobby.module.css";
 import { FaArrowLeft } from "react-icons/fa";
+import axios from "axios";
 
 const Lobby = () => {
   const navigate = useNavigate();
@@ -9,20 +10,32 @@ const Lobby = () => {
   const [roomCode, setRoomCode] = useState("");
   const [loading, setLoading] = useState(false)
 
-  const handleCreateRoom = () => {
-    setLoading(true)
-    setTimeout(() => {
-        navigate("/waiting")
-    }, 3000);
+  const handleCreateRoom = async () => {
+    try {
+      setLoading(true);
+      let res = await axios.post('http://localhost:5000/room/', {}, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      })
+      navigate(`/waiting/${res.data.roomId}`)
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleJoinRoom = () => {
+  const handleJoinRoom = async() => {
     if (showJoinInput) {
       if (roomCode.trim() !== "") {
-        setLoading(true)
-        setTimeout(() => {
-            navigate("/waiting")
-        }, 3000);
+        try {
+          setLoading(true);
+          await axios.post(`http://localhost:5000/room/${roomCode}/join`, {}, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+          })
+          navigate(`/waiting/${roomCode}`)
+        } catch (error) {
+          console.log(error)
+        }        
       } else {
         alert("Please enter a valid room code.");
       }

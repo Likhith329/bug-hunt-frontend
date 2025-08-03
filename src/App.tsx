@@ -20,7 +20,7 @@ function App() {
       <Route element={<PrivateRoutes />}>
         <Route element={<Header />}>
           <Route path="/lobby" element={<Lobby />} />
-          <Route path="/waiting" element={<WaitingPage />} />
+          <Route path="/waiting/:roomId" element={<WaitingPage />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />
