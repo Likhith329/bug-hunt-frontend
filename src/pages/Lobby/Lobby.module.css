@@ -1,0 +1,146 @@
+.LobbyPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 80px); /* Adjust if header height changes */
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    animation: subtlePulse 10s infinite alternate;
+  }
+  
+  @keyframes subtlePulse {
+    0% {
+      background-color: #0f0f0f;
+    }
+    100% {
+      background-color: #141414;
+    }
+  }
+  
+  .LobbyContainer {
+    background: rgba(0, 255, 128, 0.05);
+    border: 1px solid rgba(0, 255, 128, 0.2);
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    padding: 50px 60px;
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(0, 255, 128, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+  }
+  
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    from {
+      transform: translateY(20px);
+    }
+  }
+  
+  .title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #00ffaa;
+    text-shadow: 0 0 10px rgba(0, 255, 128, 0.5);
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  .actionButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+  }
+  
+  .actionButton {
+    background: transparent;
+    border: 2px solid #00ff88;
+    color: #00ff88;
+    padding: 12px 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .actionButton::before {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 255, 128, 0.2);
+    transition: width 0.3s ease-in-out;
+    z-index: 0;
+  }
+  
+  .actionButton:hover::before {
+    width: 100%;
+  }
+  
+  .actionButton:hover {
+    color: #0f0f0f;
+    background: #00ff88;
+    box-shadow: 0 0 15px #00ff88;
+    transform: scale(1.03);
+    z-index: 1;
+  }
+
+  .joinRoomContainer {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .roomCodeInput {
+    padding: 16px 20px;
+    border-radius: 6px;
+    border: 1px solid #00ff88;
+    background: rgba(0, 0, 0, 0.6);
+    color: #00ff88;
+    font-family: 'Fira Code', monospace;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  
+  .roomCodeInput:focus {
+    outline: none;
+    border-color: #00ffaa;
+    box-shadow: 0 0 10px #00ffaa;
+  }
+  
+  .joinRoomButton {
+    padding: 10px 16px;
+    background: transparent;
+    border: 1px solid #00ff88;
+    color: #00ff88;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+  
+  .joinRoomButton:hover {
+    background: #00ff88;
+    color: #0f0f0f;
+    box-shadow: 0 0 15px #00ff88;
+  }
+
+  .backButton {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    cursor: pointer;
+  }
+  
