@@ -28,6 +28,8 @@ const Login = () => {
     try {
       const res = await api.post('/auth/login', payload);
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("username", res.data.user.username);
+      localStorage.setItem("userId", res.data.user.id);
       navigate("/lobby");
     } catch (error) {
       console.error("Login failed", error);
