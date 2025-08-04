@@ -16,9 +16,11 @@ const WaitingPage = () => {
     getRoomDetails()
     socket.on('player-joined', handlePlayerJoined);
     socket.on('player-left', handlePlayerLeft)
+    socket.on('host-changed', handleHostChange)
     return () => {
       socket.off('player-joined', handlePlayerJoined);
       socket.off('player-left', handlePlayerLeft)
+      socket.on('host-changed`', handleHostChange)
     };
   }, [])
 
@@ -30,7 +32,7 @@ const WaitingPage = () => {
           setPlayerId(p.id)
           socket.emit('join-room', {roomId, username, playerId: p.id})
         }
-        return {id: p.id, name: p.user.username}
+        return {id: p.id, name: p.user.username, isHost: p.isHost}
       }))
     } catch (error: any) {
       if (error.response && error.response.status === 403) {
@@ -59,7 +61,12 @@ const WaitingPage = () => {
       return prevPlayers.filter((p: any) => p.id !== data.playerId);
     });
   };
-  
+
+  const handleHostChange = (data: any) => {
+    setPlayers((prevPlayers: any) => {
+      return prevPlayers.map((p: any) => p.id == data.newHostId ? {...p, isHost: true} : {...p, isHost: false})
+    })
+  }
   
   const handleLeaveRoom = async() => {
     try {
@@ -75,7 +82,7 @@ const WaitingPage = () => {
     <div className={styles.waitingPage}>
       <div className={styles.wpContainer}>
         <div className={styles.wpHeader}>
-          <div className={styles.title}>Waiting for Players...</div>``
+          <div className={styles.title}>Waiting for Players...</div>
           <div className={styles.subtitle}>
             Join the game with this room code:
           </div>
@@ -91,7 +98,7 @@ const WaitingPage = () => {
           <div className={styles.playerListTitle}>Players</div>
           <div className={styles.playerList}>
           {players.map((player: any, index) => (
-            <div className={styles.playerItem} key={index}>{player.name}</div>
+            <div className={styles.playerItem} key={index}>{player.isHost && '👑 '}{player.name}</div>
           ))}
           </div>
         </div>
