@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./WaitingPage.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import api from "../../lib/api";
 import socket from "../../lib/socket";
 
@@ -10,7 +10,13 @@ const WaitingPage = () => {
   const [username,] = useState(localStorage.getItem('username'))
   const [userId,] = useState(localStorage.getItem('userId'))
   const [playerId, setPlayerId] = useState('')
+  const playerIdRef = useRef('')
+  const [isHost, setIsHost] = useState(false)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    playerIdRef.current = playerId
+  }, [playerId])
 
   useEffect(() => {
     getRoomDetails()
@@ -20,7 +26,7 @@ const WaitingPage = () => {
     return () => {
       socket.off('player-joined', handlePlayerJoined);
       socket.off('player-left', handlePlayerLeft)
-      socket.on('host-changed`', handleHostChange)
+      socket.off('host-changed', handleHostChange)
     };
   }, [])
 
@@ -31,6 +37,8 @@ const WaitingPage = () => {
         if(p.userId == userId) {
           setPlayerId(p.id)
           socket.emit('join-room', {roomId, username, playerId: p.id})
+          if(p.isHost) setIsHost(true);
+          return {id: p.id, name: 'You', isHost: p.isHost}
         }
         return {id: p.id, name: p.user.username, isHost: p.isHost}
       }))
@@ -66,6 +74,7 @@ const WaitingPage = () => {
     setPlayers((prevPlayers: any) => {
       return prevPlayers.map((p: any) => p.id == data.newHostId ? {...p, isHost: true} : {...p, isHost: false})
     })
+    setIsHost(data.newHostId == playerIdRef.current);
   }
   
   const handleLeaveRoom = async() => {
@@ -104,7 +113,7 @@ const WaitingPage = () => {
         </div>
 
         <div className={styles.actionButtons}>
-          <div className={styles.actionButton}>start Game</div>
+          {isHost ? <div className={styles.actionButton}>start Game</div> : ''}
           <div className={styles.actionButton} onClick={handleLeaveRoom}>Leave Room</div>
         </div>
       </div>
