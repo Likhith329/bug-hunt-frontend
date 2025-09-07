@@ -1,0 +1,216 @@
+    .challengeContainer {
+    display: flex;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 40px;
+    gap: 2rem;
+    animation: subtlePulse 10s infinite alternate;
+    height: 60vh; /* Full viewport height */
+    box-sizing: border-box; /* Include padding in height */
+    }
+  
+  @keyframes subtlePulse {
+    0% { background-color: #0f0f0f; }
+    100% { background-color: #141414; }
+  }
+  
+  /* Left side - Challenge info */
+  .header {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #00ffaa;
+    text-shadow: 0 0 10px rgba(0, 255, 128, 0.5);
+  }
+  
+  .description {
+    font-size: 1rem;
+    color: #aaffaa;
+    text-shadow: 0 0 5px rgba(0, 255, 128, 0.3);
+  }
+  
+  /* Right side - Editor + buttons */
+  .editorContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .editor {
+    flex: 1; /* Fill all remaining vertical space in column */
+    border: 1px solid rgba(0, 255, 128, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0, 255, 128, 0.2);
+  }
+  
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.5rem;
+  }
+  
+  .runButton,
+  .submitButton {
+    flex: 1;
+    background: transparent;
+    border: 2px solid #00ff88;
+    color: #00ff88;
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    font-family: 'Fira Code', monospace;
+    font-size: 1rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .runButton::before,
+  .submitButton::before {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 255, 128, 0.2);
+    transition: width 0.3s ease-in-out;
+    z-index: 0;
+  }
+  
+  .runButton:hover::before,
+  .submitButton:hover::before {
+    width: 100%;
+  }
+  
+  .runButton:hover,
+  .submitButton:hover {
+    color: #0f0f0f;
+    background: #00ff88;
+    box-shadow: 0 0 15px #00ff88;
+    transform: scale(1.03);
+    z-index: 1;
+  }
+  
+  .testCases {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .testCase {
+    background: rgba(0, 255, 128, 0.05);
+    border: 1px solid rgba(0, 255, 128, 0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    color: #aaffaa;
+    box-shadow: 0 0 8px rgba(0, 255, 128, 0.2);
+  }
+  
+  .testCase span {
+    font-weight: bold;
+    color: #00ffaa;
+    margin-right: 6px;
+  }
+  
+  .testInput,
+  .testOutput {
+    margin: 2px 0;
+  }
+
+  .results {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .tabHeader {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .tabButton {
+    padding: 8px 14px;
+    border: 1px solid rgba(0, 255, 128, 0.3);
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    color: #aaffaa;
+    transition: all 0.3s ease;
+  }
+  
+  .tabButton:hover {
+    background: rgba(0, 255, 128, 0.15);
+  }
+  
+  .activeTab {
+    background: #00ffaa;
+    color: #0f0f0f;
+    box-shadow: 0 0 10px #00ffaa;
+  }
+  
+  .tabContent {
+    padding: 12px;
+    border: 1px solid rgba(0, 255, 128, 0.3);
+    border-radius: 8px;
+    background: rgba(0, 255, 128, 0.05);
+  }
+  
+  .resultCase {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-family: 'Fira Code', monospace;
+  }
+  
+  .resultCase span {
+    font-weight: bold;
+    margin-right: 6px;
+  }
+  
+  .pass {
+    border-left: 4px solid #00ffaa;
+  }
+  
+  .fail {
+    border-left: 4px solid #ff5555;
+  }
+  
+
+  .verdict {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .accepted {
+    color: #00ffaa;
+    background: rgba(0, 255, 128, 0.1);
+    border: 1px solid #00ffaa;
+    box-shadow: 0 0 12px rgba(0, 255, 128, 0.3);
+  }
+  
+  .failed {
+    color: #ff6666;
+    background: rgba(255, 85, 85, 0.1);
+    border: 1px solid #ff6666;
+    box-shadow: 0 0 12px rgba(255, 85, 85, 0.3);
+  }
+  
+  

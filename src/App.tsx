@@ -6,6 +6,7 @@ import Lobby from "./pages/Lobby/Lobby";
 import Header from "./Components/Header/Header";
 import "./App.css";
 import WaitingPage from "./pages/WaitingPage/WaitingPage";
+import Challenges from "./pages/Challeges/Challenges";
 
 function App() {
   const PrivateRoutes = () => {
@@ -21,6 +22,7 @@ function App() {
         <Route element={<Header />}>
           <Route path="/lobby" element={<Lobby />} />
           <Route path="/waiting/:roomId" element={<WaitingPage />} />
+          <Route path="/game/:gameId" element={<Challenges />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

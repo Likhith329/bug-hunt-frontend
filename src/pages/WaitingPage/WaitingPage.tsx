@@ -3,9 +3,11 @@ import styles from "./WaitingPage.module.css";
 import { useEffect, useRef, useState } from "react";
 import api from "../../lib/api";
 import socket from "../../lib/socket";
+import Loader from "../../Components/Loader/Loader";
 
 const WaitingPage = () => {
   const { roomId } = useParams()
+  const [gameId, setGameId] = useState('')
   const [players, setPlayers] = useState([])
   const [username,] = useState(localStorage.getItem('username'))
   const [userId,] = useState(localStorage.getItem('userId'))
@@ -13,6 +15,7 @@ const WaitingPage = () => {
   const playerIdRef = useRef('')
   const [isHost, setIsHost] = useState(false)
   const navigate = useNavigate()
+  const [isLoading, setLoader] = useState(false)
 
   useEffect(() => {
     playerIdRef.current = playerId
@@ -33,6 +36,7 @@ const WaitingPage = () => {
   const getRoomDetails = async() => {
     try {
       let res = await api.get(`room/${roomId}`)
+      setGameId(res.data.gameId)
       setPlayers(res.data.players.map((p: any) => {
         if(p.userId == userId) {
           setPlayerId(p.id)
@@ -87,37 +91,54 @@ const WaitingPage = () => {
     }
   }
 
+  const handleStartGame = async () => {
+    setLoader(true);
+    try {
+      await api.post('/game/start', { roomId });
+      localStorage.setItem('playerId', playerId)
+      navigate(`/game/${gameId}`)
+    } catch (error) {
+      console.error("Error starting game:", error);
+    } finally {
+      setLoader(false);
+    }
+  };
+
   return (
-    <div className={styles.waitingPage}>
-      <div className={styles.wpContainer}>
-        <div className={styles.wpHeader}>
-          <div className={styles.title}>Waiting for Players...</div>
-          <div className={styles.subtitle}>
-            Join the game with this room code:
+    <>
+    {isLoading? <Loader/>: 
+        <div className={styles.waitingPage}>
+        <div className={styles.wpContainer}>
+          <div className={styles.wpHeader}>
+            <div className={styles.title}>Waiting for Players...</div>
+            <div className={styles.subtitle}>
+              Join the game with this room code:
+            </div>
+            <div className={styles.roomCodeContainer}>
+              <div className={styles.roomCode}>{roomId}</div>
+              <div className={styles.copyButton} onClick={handleRoomCodeCopy}>Copy</div>
+            </div>
           </div>
-          <div className={styles.roomCodeContainer}>
-            <div className={styles.roomCode}>{roomId}</div>
-            <div className={styles.copyButton} onClick={handleRoomCodeCopy}>Copy</div>
+  
+          <div className={styles.divider}></div>
+  
+          <div className={styles.playerListContainer}>
+            <div className={styles.playerListTitle}>Players</div>
+            <div className={styles.playerList}>
+            {players.map((player: any, index) => (
+              <div className={styles.playerItem} key={index}>{player.isHost && '👑 '}{player.name}</div>
+            ))}
+            </div>
           </div>
-        </div>
-
-        <div className={styles.divider}></div>
-
-        <div className={styles.playerListContainer}>
-          <div className={styles.playerListTitle}>Players</div>
-          <div className={styles.playerList}>
-          {players.map((player: any, index) => (
-            <div className={styles.playerItem} key={index}>{player.isHost && '👑 '}{player.name}</div>
-          ))}
+  
+          <div className={styles.actionButtons}>
+            {isHost ? <div className={styles.actionButton} onClick={handleStartGame}>start Game</div> : ''}
+            <div className={styles.actionButton} onClick={handleLeaveRoom}>Leave Room</div>
           </div>
-        </div>
-
-        <div className={styles.actionButtons}>
-          {isHost ? <div className={styles.actionButton}>start Game</div> : ''}
-          <div className={styles.actionButton} onClick={handleLeaveRoom}>Leave Room</div>
         </div>
       </div>
-    </div>
+    }
+    </>
   );
 };
 

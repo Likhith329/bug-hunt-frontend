@@ -3,6 +3,7 @@ import { useState } from "react";
 import styles from "./Lobby.module.css";
 import { FaArrowLeft } from "react-icons/fa";
 import api from "../../lib/api";
+import Loader from "../../Components/Loader/Loader";
 
 const Lobby = () => {
   const navigate = useNavigate();
@@ -48,16 +49,7 @@ const Lobby = () => {
   return (
     <>
     {loading ? 
-          <div className={styles.letterCarousel}>
-          <span>B</span>
-          <span>u</span>
-          <span>g</span>
-          <span> </span>
-          <span>H</span>
-          <span>u</span>
-          <span>n</span>
-          <span>t</span>
-        </div>:
+          <Loader/>:
             <div className={styles.LobbyPage}>
             <div className={styles.LobbyContainer}>
               <div className={styles.title}>Welcome, Player!</div>
