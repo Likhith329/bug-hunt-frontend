@@ -1,7 +1,6 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
-// import './Auth.css';
+import styles from "./Auth.module.css";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import api from "../../lib/api";
 
 interface SignupValues {
@@ -48,58 +47,76 @@ const register = async(payload: any) => {
 
 const Signup = () => {
   return (
-    <div className="auth-container">
-      <div className="title">Create Account </div>
-      <Formik
-        initialValues={{
-          username: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-        }}
-        validate={validate}
-        onSubmit={(values) => {
-          const {confirmPassword, ...payload} = values
-          register(payload)
-        }}
-      >
-        <Form className="auth-form">
-          <div className="form-control">
-            <label htmlFor="username">Username</label>
-            <Field type="text" name="username" />
-            <ErrorMessage name="username" component="div" className="error" />
-          </div>
+<div className={styles.authPage}>
+  <div className={styles.authContainer}>
+    <div className={styles.title}>Bug Hunt</div>
+    <Formik
+      initialValues={{
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      }}
+      validate={validate}
+      onSubmit={(values) => {
+        const { confirmPassword, ...payload } = values;
+        register(payload);
+        console.log("Submitted:", payload);
+      }}
+    >
+      <Form className={styles.authForm}>
+        <div className={styles.formControl}>
+          <label htmlFor="username">Username</label>
+          <Field type="text" name="username" />
+          <ErrorMessage
+            name="username"
+            component="div"
+            className={styles.error}
+          />
+        </div>
 
-          <div className="form-control">
-            <label htmlFor="email">Email</label>
-            <Field type="email" name="email" />
-            <ErrorMessage name="email" component="div" className="error" />
-          </div>
+        <div className={styles.formControl}>
+          <label htmlFor="email">Email</label>
+          <Field type="email" name="email" />
+          <ErrorMessage
+            name="email"
+            component="div"
+            className={styles.error}
+          />
+        </div>
 
-          <div className="auth-control">
-            <label htmlFor="password">Password</label>
-            <Field type="password" name="password" />
-            <ErrorMessage name="password" component="div" className="error" />
-          </div>
+        <div className={styles.formControl}>
+          <label htmlFor="password">Password</label>
+          <Field type="password" name="password" />
+          <ErrorMessage
+            name="password"
+            component="div"
+            className={styles.error}
+          />
+        </div>
 
-          <div className="auth-control">
-            <label htmlFor="confirmPassword">Confirm Password</label>
-            <Field type="password" name="confirmPassword" />
-            <ErrorMessage
-              name="confirmPassword"
-              component="div"
-              className="error"
-            />
-          </div>
+        <div className={styles.formControl}>
+          <label htmlFor="confirmPassword">Confirm Password</label>
+          <Field type="password" name="confirmPassword" />
+          <ErrorMessage
+            name="confirmPassword"
+            component="div"
+            className={styles.error}
+          />
+        </div>
 
-          <button type="submit">Signup</button>
+        <button type="submit" className={styles.submitButton}>
+          Signup
+        </button>
 
-          <div className="auth-link">
-            Already have an account? <Link to="/">Login</Link>
-          </div>
-        </Form>
-      </Formik>
-    </div>
+        <div className={styles.authLink}>
+          Already have an account? <Link to="/">Login</Link>
+        </div>
+      </Form>
+    </Formik>
+  </div>
+</div>
+
   );
 };
 
