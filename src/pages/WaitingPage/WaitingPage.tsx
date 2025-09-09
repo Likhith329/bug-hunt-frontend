@@ -13,6 +13,7 @@ const WaitingPage = () => {
   const [userId,] = useState(localStorage.getItem('userId'))
   const [playerId, setPlayerId] = useState('')
   const playerIdRef = useRef('')
+  const gameIdRef = useRef('')
   const [isHost, setIsHost] = useState(false)
   const navigate = useNavigate()
   const [isLoading, setLoader] = useState(false)
@@ -22,14 +23,22 @@ const WaitingPage = () => {
   }, [playerId])
 
   useEffect(() => {
+    gameIdRef.current = gameId
+  }, [gameId])
+
+  useEffect(() => {
     getRoomDetails()
     socket.on('player-joined', handlePlayerJoined);
     socket.on('player-left', handlePlayerLeft)
     socket.on('host-changed', handleHostChange)
+    socket.on('game-start', handleStartGame)
+    socket.on('game-started', handleGameStarted)
     return () => {
       socket.off('player-joined', handlePlayerJoined);
       socket.off('player-left', handlePlayerLeft)
       socket.off('host-changed', handleHostChange)
+      socket.off('game-start', handleStartGame)
+      socket.off('game-started', handleGameStarted)
     };
   }, [])
 
@@ -91,11 +100,13 @@ const WaitingPage = () => {
     }
   }
 
-  const handleStartGame = async () => {
+  const startGame = async () => {
     setLoader(true);
+    socket.emit('game-start', { roomId })
     try {
-      await api.post('/game/start', { roomId });
+      await api.post('/game/start', { roomId });``
       localStorage.setItem('playerId', playerId)
+      socket.emit('game-started', { roomId })
       navigate(`/game/${gameId}`)
     } catch (error) {
       console.error("Error starting game:", error);
@@ -103,6 +114,17 @@ const WaitingPage = () => {
       setLoader(false);
     }
   };
+
+  const handleStartGame = () => {
+    setLoader(true)
+    console.log('game started')
+  }
+
+  const handleGameStarted = () => {
+    setLoader(false)
+    localStorage.setItem('playerId', playerIdRef.current)
+    navigate(`/game/${gameIdRef.current}`)
+  }
 
   return (
     <>
@@ -132,7 +154,7 @@ const WaitingPage = () => {
           </div>
   
           <div className={styles.actionButtons}>
-            {isHost ? <div className={styles.actionButton} onClick={handleStartGame}>start Game</div> : ''}
+            {isHost ? <div className={styles.actionButton} onClick={startGame}>start Game</div> : ''}
             <div className={styles.actionButton} onClick={handleLeaveRoom}>Leave Room</div>
           </div>
         </div>

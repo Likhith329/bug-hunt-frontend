@@ -46,6 +46,10 @@ const Challenges = () => {
         setResults(res.data.testCases); // assuming backend sends test case results
       }
       setAllPassed(res.data.isCorrect)
+      if(actionType == 'submit') {
+        getChallenge()
+        setResults([])
+      }
     } catch (error) {
       console.log(error)
     }
